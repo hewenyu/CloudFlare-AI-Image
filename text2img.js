@@ -1,7 +1,7 @@
 // 配置
 const CONFIG = {
     CF_ENV: null,
-    API_KEY: "sk-xxxxx",  // 对外验证key
+    API_KEY: null,  // 对外验证key，将从环境变量获取
     SF_TOKEN:"sk-xxxxxxxx",
     CF_IS_TRANSLATE: true,  // 是否启用提示词AI翻译及优化,关闭后将会把提示词直接发送给绘图模型
     CF_TRANSLATE_MODEL: "@cf/qwen/qwen1.5-14b-chat-awq",  // 使用的cf ai模型
@@ -58,7 +58,8 @@ const CONFIG = {
   // 验证授权
   function isAuthorized(request) {
     const authHeader = request.headers.get("Authorization");
-    return authHeader && authHeader.startsWith("Bearer ") && authHeader.split(" ")[1] === CONFIG.API_KEY;
+    const apiKey = CONFIG.CF_ENV.API_KEY || CONFIG.API_KEY;
+    return authHeader && authHeader.startsWith("Bearer ") && authHeader.split(" ")[1] === apiKey;
   }
   
   // 处理模型列表请求
@@ -611,6 +612,7 @@ const CONFIG = {
   export default {
     async fetch(request, env) {
       CONFIG.CF_ENV=env;
+      CONFIG.API_KEY = env.API_KEY || "sk-xxxxx";  // 从环境变量获取 API_KEY，如果不存在则使用默认值
       const url = new URL(request.url);
       if (url.pathname.startsWith('/image/')) {
         return handleImageRequest(request);
