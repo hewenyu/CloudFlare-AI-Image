@@ -16,7 +16,7 @@
   },
   "routes": [
     {
-      "pattern": "img.yueban.fan/*",
+      "pattern": "img.yueban.fan",
       "custom_domain": true
     }
   ]
