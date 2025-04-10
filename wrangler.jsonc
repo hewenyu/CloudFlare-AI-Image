@@ -10,8 +10,5 @@
   ],
   "ai": {
     "binding": "AI"
-  },
-  "vars": {
-    "API_KEY": "sk-xxxxx"
   }
 }
