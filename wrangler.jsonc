@@ -1,5 +1,5 @@
 {
-  "name": "cloudflare-ai-image",
+  "name": "ai-img",
   "compatibility_date": "2025-04-10",
   "main": "text2img.js",
   "kv_namespaces": [
