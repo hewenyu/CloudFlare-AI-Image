@@ -13,11 +13,5 @@
   },
   "vars": {
     "API_KEY": "sk-xxxxx"
-  },
-  "routes": [
-    {
-      "pattern": "img.yueban.fan/*",
-      "custom_domain": true
-    }
-  ]
+  }
 }
