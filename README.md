@@ -20,44 +20,26 @@
 - 已接入Cloudflare的域名
 - Node.js环境（用于wrangler部署）
 
-### 2. 配置Cloudflare
+### 2. 配置wrangler.jsonc
 
-1. **创建KV命名空间**：
-   - 在Cloudflare控制台创建KV命名空间并命名为`IMAGE_KV`
-   - 记录生成的命名空间ID
+创建一个基本的wrangler.jsonc文件：
 
-2. **创建wrangler.jsonc**：
-   ```json
-   {
-     "name": "ai-img",
-     "compatibility_date": "2025-04-10",
-     "main": "text2img.js",
-     "kv_namespaces": [
-       {
-         "binding": "IMAGE_KV",
-         "id": "您的KV命名空间ID"
-       }
-     ],
-     "ai": {
-       "binding": "AI"
-     },
-     "vars": {
-       "API_KEY": "您的API密钥"
-     },
-     "routes": [
-       {
-         "pattern": "您的域名",
-         "custom_domain": true
-       }
-     ]
-   }
-   ```
-
-3. **设置DNS**：
-   - 在Cloudflare DNS设置中添加CNAME记录
-   - 名称：您的子域名（如img）
-   - 目标：<您的用户名>.workers.dev
-   - 代理状态：开启（橙色云朵）
+```json
+{
+  "name": "ai-img",
+  "compatibility_date": "2025-04-10",
+  "main": "text2img.js",
+  "kv_namespaces": [
+    {
+      "binding": "IMAGE_KV",
+      "id": "您的KV命名空间ID"
+    }
+  ],
+  "ai": {
+    "binding": "AI"
+  }
+}
+```
 
 ### 3. 部署Worker
 
@@ -71,6 +53,27 @@ npx wrangler login
 # 部署
 npx wrangler deploy
 ```
+
+### 4. 手动配置(推荐)
+
+部署后，在Cloudflare控制台中完成以下配置：
+
+1. **KV命名空间**:
+   - 创建KV命名空间并命名为`IMAGE_KV`
+   - 在Worker设置中绑定此KV命名空间
+
+2. **环境变量**:
+   - 添加环境变量`API_KEY`，设置为您的API密钥
+
+3. **自定义域名**:
+   - 在Worker的"触发器"选项卡中添加自定义域名
+   - 例如：`img.yourdomain.com`
+
+4. **DNS配置**:
+   - 在DNS设置中添加CNAME记录，指向您的Worker地址
+   - 名称：子域名（如img）
+   - 目标：`<您的用户名>.workers.dev`
+   - 代理状态：开启（橙色云朵）
 
 ## 使用说明
 
@@ -122,7 +125,6 @@ Content-Type: application/json
 
 ## 注意事项
 
-- SF_TOKEN为硅基流动平台的API Token，需要提前申请，不使用可不填写
+- 如需使用"SF-Kolors"模型，请在代码中配置SF_TOKEN（硅基流动平台的API Token）
 - 部分模型可能有使用限制，请注意查看Cloudflare Workers AI配额
-
-![CloudFlare配置](https://raw.githubusercontent.com/justlovemaki/CloudFlare-AI-Image/refs/heads/main/example-1.png)
+- 推荐使用手动配置方式，避免自动DNS配置可能带来的冲突
